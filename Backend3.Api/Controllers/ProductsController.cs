@@ -16,10 +16,14 @@ namespace Backend3.Api.Controllers
             _productService = productService;
         }
 
+        // CHANGED: added page + pageSize
+        // GET /api/Products?page=1&pageSize=10
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 10)
         {
-            var products = await _productService.GetAllAsync();
+            var products = await _productService.GetPagedAsync(page, pageSize);
             return Ok(products);
         }
 

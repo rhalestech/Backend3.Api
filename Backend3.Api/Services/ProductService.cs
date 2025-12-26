@@ -13,9 +13,17 @@ namespace Backend3.Api.Services
             _context = context;
         }
 
-        public async Task<List<Product>> GetAllAsync()
+        // NEW: pagination method
+        public async Task<List<Product>> GetPagedAsync(int page, int pageSize)
         {
-            return await _context.Products.ToListAsync();
+            if (page < 1) page = 1;
+            if (pageSize < 1) pageSize = 10;
+
+            return await _context.Products
+                .OrderBy(p => p.Id)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
         }
 
         public async Task<Product?> GetByIdAsync(int id)
